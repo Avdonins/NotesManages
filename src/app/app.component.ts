@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { ContentComponent } from './content/content.component';
 import { HeaderComponent } from './header/header.component';
-import { CreateNoteFormComponent } from './create-task-form/create-note-form.component';
+import { CreateNoteFormComponent } from './create-note-form/create-note-form.component';
 
 @Component({
   selector: 'app-root',

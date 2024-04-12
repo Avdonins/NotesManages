@@ -1,14 +1,13 @@
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
 import { SidenavService } from '../services/sidenav/sidenav.service';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
-import { Task } from '../model/task.model';
-import { TaskService } from '../services/task/task.service';
-import { timeout } from 'rxjs';
+import { Note } from '../model/note.model';
+import { NoteService } from '../services/note/note.service';
 import { MatDialog } from '@angular/material/dialog';
-import { CreateNoteFormComponent } from '../create-task-form/create-note-form.component';
+import { CreateNoteFormComponent } from '../create-note-form/create-note-form.component';
 
 @Component({
   selector: 'app-content',
@@ -22,20 +21,13 @@ export class ContentComponent implements OnInit, AfterViewInit{
   greeting: string = '';
   selectMode: 'week' | 'month' = 'week';
   currentCategory: 'Upcoming' | 'Overdue' | 'Completed' = 'Upcoming';
-  tasksCount: number = 0;
-  allTasks: Task[] = []
-  // newTask: Task = {
-  //   title: '',
-  //   description: '',
-  //   completed: false,
-  //   tags: [],
-  //   dueDate: null
-  // }
+  notesCount: number = 0;
+  allNotes: Note[] = []
   @ViewChild('sidenav') sidenav: MatSidenav;
 
   constructor(
     private sidenavService: SidenavService,
-    private taskService: TaskService,
+    private notesService: NoteService,
     public dialogCreateNote: MatDialog
   ) {
     this.dateValue = new Date()
@@ -46,8 +38,8 @@ export class ContentComponent implements OnInit, AfterViewInit{
   }
 
   ngOnInit(): void {
-    this.taskService.getAllTasks().subscribe((tasks) => {
-      console.log(tasks)
+    this.notesService.getAllTasks().subscribe((notes) => {
+      this.allNotes = notes;
     })
   }
 
@@ -56,7 +48,7 @@ export class ContentComponent implements OnInit, AfterViewInit{
   }
 
   openCreateNoteDialog() {
-    const dialogRef = this.dialogCreateNote.open(CreateNoteFormComponent, { data: { task: {}, allTags: ['tag1', 'tag2'] } });
+    const dialogRef = this.dialogCreateNote.open(CreateNoteFormComponent, { data: { note: {}, allTags: ['tag1', 'tag2'] } });
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
         console.log(result)

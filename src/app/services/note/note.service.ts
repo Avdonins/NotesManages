@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Observable, delay, of } from 'rxjs';
-import { Task } from '../../model/task.model';
+import { Note } from '../../model/note.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TaskService {
+export class NoteService {
   constructor() {}
 
   // Imitation of fetching server
-  getAllTasks(): Observable<Task[]> {
-    const fakeRespone: Task[] = JSON.parse(localStorage.getItem('tasks') || '[]');
+  getAllTasks(): Observable<Note[]> {
+    const fakeRespone: Note[] = JSON.parse(localStorage.getItem('notes') || '[]');
     return of(fakeRespone).pipe(delay((Math.random() * (4000 + 1000) + 3000)))
   }
 }

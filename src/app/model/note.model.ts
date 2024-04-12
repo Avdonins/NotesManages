@@ -1,4 +1,4 @@
-export interface Task {
+export interface Note {
     title: string
     description: string
     dueDate?: Date | null

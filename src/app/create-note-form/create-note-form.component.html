@@ -2,37 +2,37 @@
     <h2 mat-dialog-title class="form-title">Create new note</h2>
     <mat-dialog-content>
         <div class="form_title">
-            <span class="form_title-text">Title of task</span>
+            <span class="form_title-text">Title of note</span>
             <mat-form-field>
                 <mat-label>Title</mat-label>
                 <input 
                     matInput 
-                    [(ngModel)]="task.title" 
+                    [(ngModel)]="note.title" 
                     type="text"
                     required>
             </mat-form-field>
         </div>
 
         <div class="form_description">
-            <span class="form_description-text">Description of task</span>
+            <span class="form_description-text">Description of note</span>
             <mat-form-field>
                 <mat-label>Description</mat-label>
                 <textarea 
                     matInput
-                    [(ngModel)]="task.description"
+                    [(ngModel)]="note.description"
                     required>
                 </textarea>
             </mat-form-field>
         </div>
 
         <div class="form_dueDate">
-            <span class="form_dueDate-text">Due date of task</span>
+            <span class="form_dueDate-text">Due date of note</span>
             <mat-form-field>
                 <mat-label>Due date</mat-label>
                 <input 
                     matInput
                     [matDatepicker]="picker"
-                    [(ngModel)]="task.dueDate">
+                    [(ngModel)]="note.dueDate">
                 <mat-hint>DD.MM.YYYY</mat-hint>
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>

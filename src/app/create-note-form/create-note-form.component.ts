@@ -16,7 +16,7 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatAutocompleteSelectedEvent, MatAutocompleteModule} from '@angular/material/autocomplete';
-import { Task } from '../model/task.model';
+import { Note } from '../model/note.model';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { Observable, map, startWith } from 'rxjs';
 import {AsyncPipe} from '@angular/common';
@@ -48,7 +48,7 @@ import {AsyncPipe} from '@angular/common';
   styleUrl: './create-note-form.component.scss'
 })
 export class CreateNoteFormComponent implements OnInit {
-  task: Task;
+  note: Note;
   separatorKeysCodes: number[] = [ENTER, COMMA];
   tagCtrl = new FormControl('');
   filteredTags: Observable<string[]>;
@@ -59,11 +59,11 @@ export class CreateNoteFormComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<CreateNoteFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { task: Task, allTags: string[] },
+    @Inject(MAT_DIALOG_DATA) public data: { note: Note, allTags: string[] },
   ) {
-    this.task = data.task;
+    this.note = data.note;
     this.allTags = data.allTags || [];
-    this.tags = this.task.tags || [];
+    this.tags = this.note.tags || [];
     this.filteredTags = this.tagCtrl.valueChanges.pipe(
       startWith(null),
       map((tag: string | null) => (tag ? this._filter(tag) : this.allTags.slice()))
@@ -99,7 +99,7 @@ export class CreateNoteFormComponent implements OnInit {
   }
 
   onSubmit() {
-    this.dialogRef.close(this.task)
+    this.dialogRef.close({ ...this.note, tags: this.tags })
   }
 
   private _filter(value: string): string[] {

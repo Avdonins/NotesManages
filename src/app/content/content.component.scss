@@ -64,7 +64,7 @@ $background-hover: rgba(255, 255, 255, 0.06);
                         background-color: $border-color;
                     }
 
-                    &-tasks {
+                    &-notes {
                         display: flex; 
                         align-items: center;
                     }
@@ -74,13 +74,13 @@ $background-hover: rgba(255, 255, 255, 0.06);
             &-grid {
                 margin: 50px 130px;
                 
-                &_tasks, &_projects {
+                &_notes, &_projects {
                     background-color: #252628;
                     border-radius: 8px;
                     padding: 20px;
                 }
 
-                &_tasks {
+                &_notes {
                     &-header {
                         font-size: 20px;
                         height: 20%;
@@ -106,7 +106,7 @@ $background-hover: rgba(255, 255, 255, 0.06);
                         display: flex;
                         flex-direction: column;
 
-                        .task {
+                        .note {
                             display: flex;
                             align-items: center;
                             cursor: pointer;

@@ -27,29 +27,29 @@
                         </mat-select>
                     </div>
                     <div class="content-wrapper_rightside-header_counter-border"></div>
-                    <div class="content-wrapper_rightside-header_counter-tasks">
+                    <div class="content-wrapper_rightside-header_counter-notes">
                         <mat-icon>check</mat-icon>
-                        <span>{{tasksCount}} notes completed</span>
+                        <span>{{notesCount}} notes completed</span>
                     </div>
                 </div>
             </div>
             <div class="content-wrapper_rightside-grid">
-                <div class="content-wrapper_rightside-grid_tasks">
-                    <div class="content-wrapper_rightside-grid_tasks-header">My notes</div>
-                    <div class="content-wrapper_rightside-grid_tasks-categories">
+                <div class="content-wrapper_rightside-grid_notes">
+                    <div class="content-wrapper_rightside-grid_notes-header">My notes</div>
+                    <div class="content-wrapper_rightside-grid_notes-categories">
                         <span [ngClass]="{'active': currentCategory === 'Upcoming'}" (click)="currentCategory = 'Upcoming'">Upcoming</span>
                         <span [ngClass]="{'active': currentCategory === 'Overdue'}" (click)="currentCategory = 'Overdue'">Overdue</span>
                         <span [ngClass]="{'active': currentCategory === 'Completed'}" (click)="currentCategory = 'Completed'">Completed</span>
                     </div>
-                    <div class="content-wrapper_rightside-grid_tasks-items">
+                    <div class="content-wrapper_rightside-grid_notes-items">
                         <ng-container *ngIf="currentCategory === 'Upcoming'">
-                            <div (click)="openCreateNoteDialog()" class="task">
+                            <div (click)="openCreateNoteDialog()" class="note">
                                 <mat-icon>add</mat-icon>
                                 <span>Create new note</span>
                             </div>
                         </ng-container>
                         <!-- <ng-container *ngIf="currentCategory === 'Upcoming'">
-                            <span *ngIf="allTasks">Nothing to see</span>
+                            <span *ngIf="allNotes">Nothing to see</span>
                         </ng-container> -->
                     </div>
                 </div>
