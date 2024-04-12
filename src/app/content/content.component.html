@@ -1,0 +1,59 @@
+<div class="content">
+    <mat-sidenav-container class="content-wrapper">
+        <mat-sidenav #sidenav [mode]="'side'" class="content-wrapper_leftside">
+            <div class="content-wrapper_leftside-button">
+                <div class="content-wrapper_leftside-button-inner">
+                    <mat-icon>home</mat-icon>
+                    <span class="name">Home</span>
+                </div>
+            </div>
+            <div class="content-wrapper_leftside-button">
+                <div class="content-wrapper_leftside-button-inner">
+                    <mat-icon>check_circle_outline</mat-icon>
+                    <span class="name">My notes</span>
+                </div>
+            </div>
+        </mat-sidenav>
+        
+        <mat-sidenav-content class="content-wrapper_rightside">
+            <div class="content-wrapper_rightside-header">
+                <span class="content-wrapper_rightside-header_date">{{dateValue | date: 'EEEE, MMMM d'}}</span>
+                <span class="content-wrapper_rightside-header_greeeting">{{greeting}}, User</span>
+                <div class="content-wrapper_rightside-header_counter">
+                    <div class="content-wrapper_rightside-header_counter-select">
+                        <mat-select [(value)]="selectMode">
+                            <mat-option value="week">My week</mat-option>
+                            <mat-option value="month">My month</mat-option>
+                        </mat-select>
+                    </div>
+                    <div class="content-wrapper_rightside-header_counter-border"></div>
+                    <div class="content-wrapper_rightside-header_counter-tasks">
+                        <mat-icon>check</mat-icon>
+                        <span>{{tasksCount}} notes completed</span>
+                    </div>
+                </div>
+            </div>
+            <div class="content-wrapper_rightside-grid">
+                <div class="content-wrapper_rightside-grid_tasks">
+                    <div class="content-wrapper_rightside-grid_tasks-header">My notes</div>
+                    <div class="content-wrapper_rightside-grid_tasks-categories">
+                        <span [ngClass]="{'active': currentCategory === 'Upcoming'}" (click)="currentCategory = 'Upcoming'">Upcoming</span>
+                        <span [ngClass]="{'active': currentCategory === 'Overdue'}" (click)="currentCategory = 'Overdue'">Overdue</span>
+                        <span [ngClass]="{'active': currentCategory === 'Completed'}" (click)="currentCategory = 'Completed'">Completed</span>
+                    </div>
+                    <div class="content-wrapper_rightside-grid_tasks-items">
+                        <ng-container *ngIf="currentCategory === 'Upcoming'">
+                            <div (click)="openCreateNoteDialog()" class="task">
+                                <mat-icon>add</mat-icon>
+                                <span>Create new note</span>
+                            </div>
+                        </ng-container>
+                        <!-- <ng-container *ngIf="currentCategory === 'Upcoming'">
+                            <span *ngIf="allTasks">Nothing to see</span>
+                        </ng-container> -->
+                    </div>
+                </div>
+            </div>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>

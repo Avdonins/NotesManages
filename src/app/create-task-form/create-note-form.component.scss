@@ -1,0 +1,8 @@
+.form {
+    &_title, &_description, &_dueDate, &_tags {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        // align-items: center;
+    }
+}
