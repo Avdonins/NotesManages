@@ -42,15 +42,40 @@
                         <span [ngClass]="{'active': currentCategory === 'Completed'}" (click)="currentCategory = 'Completed'">Completed</span>
                     </div>
                     <div class="content-wrapper_rightside-grid_notes-items">
-                        <ng-container *ngIf="currentCategory === 'Upcoming'">
-                            <div (click)="openCreateNoteDialog()" class="note">
-                                <mat-icon>add</mat-icon>
-                                <span>Create new note</span>
-                            </div>
+                        <ng-container *ngIf="isLoading; else elseTemplate">
+                            Loading...
                         </ng-container>
-                        <!-- <ng-container *ngIf="currentCategory === 'Upcoming'">
-                            <span *ngIf="allNotes">Nothing to see</span>
-                        </ng-container> -->
+                        <ng-template #elseTemplate>
+                            @for (note of allNotes; track $index) {
+                                @if (!note.completed && currentCategory === 'Upcoming') {
+                                    <app-note 
+                                        [note]="note"
+                                        [allTags]="allTags"
+                                        (setNoteCompleted)="setNoteCompleted($event)"
+                                        (deleteNote)="deleteNote($event)"
+                                        (editNote)="editNote($event)"
+                                    ></app-note>
+                                } @else if (note.completed && currentCategory === 'Completed') {
+                                    <app-note 
+                                        [note]="note"
+                                        [allTags]="allTags"
+                                        (deleteNote)="deleteNote($event)"
+                                        (editNote)="editNote($event)"
+                                    ></app-note>
+                                } @else if (isOverdue(note) && !note.completed && currentCategory === 'Overdue') {
+                                    <app-note 
+                                        [note]="note"
+                                        [allTags]="allTags"
+                                        (deleteNote)="deleteNote($event)"
+                                        (editNote)="editNote($event)"
+                                    ></app-note>
+                                }
+                            }
+                        </ng-template>
+                    </div>
+                    <div (click)="openCreateNoteDialog()" class="content-wrapper_rightside-grid_notes-add">
+                        <mat-icon>add</mat-icon>
+                        <span>Create new note</span>
                     </div>
                 </div>
             </div>

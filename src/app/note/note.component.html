@@ -1,0 +1,23 @@
+<div class="note" [ngClass]="{'completed': note.completed}">
+    <div class="note-title">
+        <span class="note-title-text">{{note.title}}</span>
+        <div class="note-title_buttons">
+            @if (!note.completed) {
+                <mat-icon [matTooltip]="'Set completed'" (click)="onSetNoteCompleted()" class="note-title_buttons-icon">done</mat-icon>
+            }
+            <mat-icon [matTooltip]="'Edit note'" (click)="onEditNote(note)" class="note-title_buttons-icon">edit</mat-icon>
+            <mat-icon [matTooltip]="'Delete note'" (click)="onDeleteNote(note.id)" class="note-title_buttons-icon">delete</mat-icon>
+        </div>
+    </div>
+    <div class="note-description">
+        <span class="note-description-text">{{note.description}}</span>
+    </div>
+    <div class="note-dueDate" [ngClass]="{'deadlineClose': isDeadlineClose(note)}">
+        <span class="note-dueDate-text">{{note.dueDate | date: 'EEEE, d MMMM'}}</span>
+    </div>
+    <div class="note-tags">
+        @for (tag of note.tags; track $index) {
+            <span class="note-tags-text">#{{tag.name}}</span>
+        }
+    </div>
+</div>

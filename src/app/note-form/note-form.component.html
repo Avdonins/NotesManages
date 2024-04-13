@@ -46,7 +46,7 @@
                 <mat-chip-grid #chipGrid>
                     @for (tag of tags; track tag) {
                         <mat-chip-row (removed)="removeTag(tag)">
-                            #{{tag}}
+                            #{{tag.name}}
                             <button matChipRemove>
                                 <mat-icon>cancel</mat-icon>
                             </button>
@@ -62,7 +62,7 @@
                     (matChipInputTokenEnd)="addTag($event)"/>
                 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
                     @for (tag of filteredTags | async; track tag) {
-                        <mat-option [value]="tag">{{tag}}</mat-option>
+                        <mat-option [value]="tag.id">{{tag.name}}</mat-option>
                     }
                 </mat-autocomplete>
             </mat-form-field>

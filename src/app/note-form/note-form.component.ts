@@ -20,6 +20,8 @@ import { Note } from '../model/note.model';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { Observable, map, startWith } from 'rxjs';
 import {AsyncPipe} from '@angular/common';
+import { Tag } from '../model/tag.model';
+import { TagService } from '../services/tag/tag.service';
 
 @Component({
   selector: 'app-create-note-form',
@@ -44,25 +46,26 @@ import {AsyncPipe} from '@angular/common';
     provideNativeDateAdapter(),
     {provide: MAT_DATE_LOCALE, useValue: 'ru-RU'}
   ],
-  templateUrl: './create-note-form.component.html',
-  styleUrl: './create-note-form.component.scss'
+  templateUrl: './note-form.component.html',
+  styleUrl: './note-form.component.scss'
 })
-export class CreateNoteFormComponent implements OnInit {
+export class NoteFormComponent implements OnInit {
   note: Note;
   separatorKeysCodes: number[] = [ENTER, COMMA];
   tagCtrl = new FormControl('');
-  filteredTags: Observable<string[]>;
-  tags: string[] = [];
-  allTags: string[] = []
+  filteredTags: Observable<Tag[]>;
+  tags: Tag[] = [];
+  allTags: Tag[] = []
 
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
 
   constructor(
-    public dialogRef: MatDialogRef<CreateNoteFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { note: Note, allTags: string[] },
+    public dialogRef: MatDialogRef<NoteFormComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { note: Note, allTags: Tag[] },
+    private tagService: TagService
   ) {
     this.note = data.note;
-    this.allTags = data.allTags || [];
+    this.allTags = data.allTags.filter(t => !this.note.tags?.find(x => x.id === t.id)) || [];
     this.tags = this.note.tags || [];
     this.filteredTags = this.tagCtrl.valueChanges.pipe(
       startWith(null),
@@ -77,19 +80,25 @@ export class CreateNoteFormComponent implements OnInit {
   addTag(event: MatChipInputEvent) {
     const value = (event.value || '').trim();
     if(value) {
-      this.tags.push(value)
+      if(!this.allTags.find(x => x.name === value)) {
+        this.tagService.saveTag(value).subscribe((data) => {
+          this.tags.push(data);
+        })
+      } else {
+        this.tags.push(this.allTags.find(x => x.name === value)!);
+      }
     }
     event.chipInput!.clear();
   }
 
-  removeTag(tag: string) {
+  removeTag(tag: Tag) {
     this.tags = this.tags.filter(x => x !== tag)
     this.allTags.push(tag)
   }
 
   selected(event: MatAutocompleteSelectedEvent) {
-    this.tags.push(event.option.viewValue);
-    this.allTags = this.allTags.filter(x => x !== event.option.viewValue);
+    this.tags.push(this.allTags.find(t => t.name === event.option.viewValue)!);
+    this.allTags = this.allTags.filter(x => x.name !== event.option.viewValue);
     this.tagInput.nativeElement.value = '';
     this.tagCtrl.setValue(null);
   }
@@ -102,8 +111,8 @@ export class CreateNoteFormComponent implements OnInit {
     this.dialogRef.close({ ...this.note, tags: this.tags })
   }
 
-  private _filter(value: string): string[] {
+  private _filter(value: string): Tag[] {
     const filterValue = value.toLowerCase();
-    return this.allTags.filter(tag => tag.toLowerCase().includes(filterValue));
+    return this.allTags.filter(tag => tag.name.toLowerCase().includes(filterValue));
   }
 }

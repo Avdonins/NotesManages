@@ -1,0 +1,54 @@
+.note {
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    color: black;
+    border-radius: 8px;
+    
+    &-title, &-description, &-dueDate, &-tags {
+        padding: 3% 6%;
+    }
+
+    &-title {
+        display: flex;
+        justify-content: space-between;
+        font-size: 1.5rem;
+        font-weight: bold;
+        border-bottom: 1px solid rgba(0, 0, 0, .2);
+
+        &_buttons {
+            display: flex;
+            opacity: 0;
+            text-align: center;
+            transition: opacity .3s ease-in-out;
+
+            &-icon {
+                font-size: 20px;
+                cursor: pointer;
+    
+                &:hover {
+                    color: rgba(0, 0, 0, .6);
+                }
+            }
+        }
+
+    }
+
+    &-dueDate {
+        &.deadlineClose {
+            color: red;
+        }
+    }
+
+    &-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2%;
+    }
+
+    &:hover {
+        .note-title_buttons {
+            opacity: 1;
+        }
+    }
+}

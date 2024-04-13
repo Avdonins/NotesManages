@@ -7,12 +7,15 @@ import {MatSelectModule} from '@angular/material/select';
 import { Note } from '../model/note.model';
 import { NoteService } from '../services/note/note.service';
 import { MatDialog } from '@angular/material/dialog';
-import { CreateNoteFormComponent } from '../create-note-form/create-note-form.component';
+import { NoteFormComponent } from '../note-form/note-form.component';
+import { NoteComponent } from '../note/note.component';
+import { Tag } from '../model/tag.model';
+import { TagService } from '../services/tag/tag.service';
 
 @Component({
   selector: 'app-content',
   standalone: true,
-  imports: [MatSidenavModule, CommonModule, MatIconModule, MatSelectModule],
+  imports: [MatSidenavModule, CommonModule, MatIconModule, MatSelectModule, NoteComponent],
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss'
 })
@@ -22,12 +25,15 @@ export class ContentComponent implements OnInit, AfterViewInit{
   selectMode: 'week' | 'month' = 'week';
   currentCategory: 'Upcoming' | 'Overdue' | 'Completed' = 'Upcoming';
   notesCount: number = 0;
-  allNotes: Note[] = []
+  allNotes: Note[] = [];
+  allTags: Tag[] = [];
+  isLoading: boolean = false;
   @ViewChild('sidenav') sidenav: MatSidenav;
 
   constructor(
     private sidenavService: SidenavService,
     private notesService: NoteService,
+    private tagService: TagService,
     public dialogCreateNote: MatDialog
   ) {
     this.dateValue = new Date()
@@ -38,8 +44,14 @@ export class ContentComponent implements OnInit, AfterViewInit{
   }
 
   ngOnInit(): void {
-    this.notesService.getAllTasks().subscribe((notes) => {
+    this.isLoading = true;
+    this.notesService.getAllNotes().subscribe((notes) => {
       this.allNotes = notes;
+    }).add(() => {
+      this.tagService.getAllTags().subscribe((tags) => {
+        this.allTags = tags;
+        this.isLoading = false;
+      })
     })
   }
 
@@ -48,13 +60,40 @@ export class ContentComponent implements OnInit, AfterViewInit{
   }
 
   openCreateNoteDialog() {
-    const dialogRef = this.dialogCreateNote.open(CreateNoteFormComponent, { data: { note: {}, allTags: ['tag1', 'tag2'] } });
+    const dialogRef = this.dialogCreateNote.open(NoteFormComponent, { data: { note: {}, allTags: this.allTags } });
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
-        console.log(result)
-        // this.newTask = result;
-        // save new task
+        this.notesService.saveNote(result).subscribe((data) => {
+          this.allNotes = data;
+        })
       }
     })
+  }
+
+  setNoteCompleted(note: Note) {
+    this.notesService.setNoteCompleted(note).subscribe((data) => {
+      this.allNotes = data;
+    })
+  }
+
+  editNote(note: Note) {
+    this.notesService.editNote(note).subscribe((response: boolean) => {
+      if(!response) alert('Error!');
+    })
+  }
+
+  deleteNote(id: number) {
+    this.notesService.deleteNote(id).subscribe((response: boolean) => {
+      if(!response) {
+        alert('Error!');
+        return;
+      } else {
+        this.allNotes = this.allNotes.filter(note => note.id !== id)
+      }
+    })
+  }
+
+  isOverdue(note: Note) {
+    return note.dueDate && new Date(note.dueDate).getTime() < new Date().getTime();
   }
 }
