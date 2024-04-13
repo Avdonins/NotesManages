@@ -7,33 +7,34 @@ import {MatSelectModule} from '@angular/material/select';
 import { Note } from '../model/note.model';
 import { NoteService } from '../services/note/note.service';
 import { MatDialog } from '@angular/material/dialog';
-import { NoteFormComponent } from '../note-form/note-form.component';
-import { NoteComponent } from '../note/note.component';
+import { NotesComponent } from '../notes/notes.component';
+import { Reminder } from '../model/reminder.model';
 import { Tag } from '../model/tag.model';
-import { TagService } from '../services/tag/tag.service';
+import { ReminderService } from '../services/reminder/reminder.service';
+import { RemindersComponent } from '../reminders/reminders.component';
+import { ReminderComponent } from '../reminder/reminder.component';
 
 @Component({
   selector: 'app-content',
   standalone: true,
-  imports: [MatSidenavModule, CommonModule, MatIconModule, MatSelectModule, NoteComponent],
+  imports: [MatSidenavModule, CommonModule, MatIconModule, MatSelectModule, NotesComponent, RemindersComponent, ReminderComponent],
   templateUrl: './content.component.html',
   styleUrl: './content.component.scss'
 })
-export class ContentComponent implements OnInit, AfterViewInit{
+export class ContentComponent implements OnInit, AfterViewInit {
   dateValue: Date;
   greeting: string = '';
-  selectMode: 'week' | 'month' = 'week';
-  currentCategory: 'Upcoming' | 'Overdue' | 'Completed' = 'Upcoming';
+  selectStatisticMode: 'week' | 'month' | 'all' = 'week';
+  displayMode: 'notes' | 'reminders' | 'tags' | 'home' = 'reminders';
   notesCount: number = 0;
   allNotes: Note[] = [];
+  allReminders: Reminder[] = [];
   allTags: Tag[] = [];
-  isLoading: boolean = false;
+
   @ViewChild('sidenav') sidenav: MatSidenav;
 
   constructor(
     private sidenavService: SidenavService,
-    private notesService: NoteService,
-    private tagService: TagService,
     public dialogCreateNote: MatDialog
   ) {
     this.dateValue = new Date()
@@ -44,56 +45,44 @@ export class ContentComponent implements OnInit, AfterViewInit{
   }
 
   ngOnInit(): void {
-    this.isLoading = true;
-    this.notesService.getAllNotes().subscribe((notes) => {
-      this.allNotes = notes;
-    }).add(() => {
-      this.tagService.getAllTags().subscribe((tags) => {
-        this.allTags = tags;
-        this.isLoading = false;
-      })
-    })
+    // this.notesService.getAllNotes().subscribe((notes) => {
+    //   this.allNotes = notes;
+    //   this.notesCount = this.allNotes.filter(n => n.completed).length;
+    // }).add(() => {
+    //   this.reminderService.getAllReminders().subscribe((reminders) => {
+    //     this.allReminders = reminders;
+    //   })
+    // })
   }
 
   ngAfterViewInit(): void {
     this.sidenavService.setSidenav(this.sidenav);
   }
 
-  openCreateNoteDialog() {
-    const dialogRef = this.dialogCreateNote.open(NoteFormComponent, { data: { note: {}, allTags: this.allTags } });
-    dialogRef.afterClosed().subscribe(result => {
-      if(result) {
-        this.notesService.saveNote(result).subscribe((data) => {
-          this.allNotes = data;
-        })
-      }
-    })
+  onChangeSelectStatisticMode() {
+    // switch(this.selectStatisticMode) {
+    //   case 'week':
+    //     this.notesCount = this.allNotes.filter(n => n.completed && n.dueDate && new Date(n.dueDate).getTime() >= new Date().getTime() - 7 * 24 * 60 * 60 * 1000).length;
+    //     break;
+    //   case 'month':
+    //     this.notesCount = this.allNotes.filter(n => n.completed && n.dueDate && new Date(n.dueDate).getTime() >= new Date().getTime() - 30 * 24 * 60 * 60 * 1000).length;
+    //     break;
+    //   case 'all':
+    //     this.notesCount = this.allNotes.filter(n => n.completed).length;
+    //     break;
+    // }
   }
 
-  setNoteCompleted(note: Note) {
-    this.notesService.setNoteCompleted(note).subscribe((data) => {
-      this.allNotes = data;
-    })
+  changeMode(mode: 'notes' | 'reminders' | 'tags' | 'home') {
+    this.displayMode = mode;
+    this.sidenav.toggle();
   }
 
-  editNote(note: Note) {
-    this.notesService.editNote(note).subscribe((response: boolean) => {
-      if(!response) alert('Error!');
-    })
+  setNotes(notes: Note[]) {
+    this.allNotes = notes;
   }
 
-  deleteNote(id: number) {
-    this.notesService.deleteNote(id).subscribe((response: boolean) => {
-      if(!response) {
-        alert('Error!');
-        return;
-      } else {
-        this.allNotes = this.allNotes.filter(note => note.id !== id)
-      }
-    })
-  }
-
-  isOverdue(note: Note) {
-    return note.dueDate && new Date(note.dueDate).getTime() < new Date().getTime();
+  setReminders(reminders: Reminder[]) {
+    this.allReminders = reminders;
   }
 }

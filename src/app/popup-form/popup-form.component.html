@@ -1,0 +1,105 @@
+<div class="form">
+    <h2 mat-dialog-title class="form-title">Create new {{mode}}</h2>
+    <mat-dialog-content>
+
+        @if (mode === 'note') {
+            <div class="form_title">
+                <span class="form_title-text">Title of {{mode}}</span>
+                <mat-form-field>
+                    <mat-label>Title</mat-label>
+                    <input 
+                        matInput 
+                        [(ngModel)]="note.title"
+                        type="text"
+                        required>
+                </mat-form-field>
+            </div>
+    
+            <div class="form_description">
+                <span class="form_description-text">Description of note</span>
+                <mat-form-field>
+                    <mat-label>Description</mat-label>
+                    <textarea 
+                        matInput
+                        [(ngModel)]="note.description"
+                        required>
+                    </textarea>
+                </mat-form-field>
+            </div>
+        } @else if (mode === 'reminder') {
+            <div class="form_title">
+                <span class="form_title-text">Title of {{mode}}</span>
+                <mat-form-field>
+                    <mat-label>Title</mat-label>
+                    <input 
+                        matInput 
+                        [(ngModel)]="reminder.title"
+                        type="text"
+                        required>
+                </mat-form-field>
+            </div>
+    
+            <div class="form_description">
+                <span class="form_description-text">Description of note</span>
+                <mat-form-field>
+                    <mat-label>Description</mat-label>
+                    <textarea 
+                        matInput
+                        [(ngModel)]="reminder.description"
+                        required>
+                    </textarea>
+                </mat-form-field>
+            </div>
+
+            <div class="form_dueDate">
+                <span class="form_dueDate-text">Due date of reminder</span>
+                <mat-form-field>
+                    <mat-label>Due date</mat-label>
+                    <input 
+                        matInput
+                        [matDatepicker]="picker"
+                        [(ngModel)]="reminder.dueDate"
+                        required>
+                    <mat-hint>DD.MM.YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+        } @else {
+            <span>Tags here</span>
+        }
+
+        <div class="form_tags">
+            <span class="form_tags-text">Tags</span>
+            <mat-form-field>
+                <mat-label>Tags</mat-label>
+                <mat-chip-grid #chipGrid>
+                    @for (tag of tags; track tag) {
+                        <mat-chip-row (removed)="removeTag(tag)">
+                            #{{tag.name}}
+                            <button matChipRemove>
+                                <mat-icon>cancel</mat-icon>
+                            </button>
+                        </mat-chip-row>
+                    }
+                </mat-chip-grid>
+                <input 
+                    placeholder="New tag" 
+                    #tagInput
+                    [formControl]="tagCtrl"
+                    [matChipInputFor]="chipGrid"
+                    [matAutocomplete]="auto"
+                    (matChipInputTokenEnd)="addTag($event)"/>
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                    @for (tag of filteredTags | async; track tag) {
+                        <mat-option [value]="tag.id">{{tag.name}}</mat-option>
+                    }
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button (click)="onCancel()">Cancel</button>
+        <button mat-button (click)="onSubmit()">Submit</button>
+    </mat-dialog-actions>
+</div>

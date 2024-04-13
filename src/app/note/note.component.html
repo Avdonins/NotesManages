@@ -1,4 +1,4 @@
-<div class="note" [ngClass]="{'completed': note.completed}">
+<div class="note" #noteElement [ngClass]="{'completed': note.completed}">
     <div class="note-title">
         <span class="note-title-text">{{note.title}}</span>
         <div class="note-title_buttons">
@@ -12,9 +12,9 @@
     <div class="note-description">
         <span class="note-description-text">{{note.description}}</span>
     </div>
-    <div class="note-dueDate" [ngClass]="{'deadlineClose': isDeadlineClose(note)}">
+    <!-- <div class="note-dueDate" [ngClass]="{'deadlineClose': isDeadlineClose(note)}">
         <span class="note-dueDate-text">{{note.dueDate | date: 'EEEE, d MMMM'}}</span>
-    </div>
+    </div> -->
     <div class="note-tags">
         @for (tag of note.tags; track $index) {
             <span class="note-tags-text">#{{tag.name}}</span>

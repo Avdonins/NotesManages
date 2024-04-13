@@ -22,6 +22,8 @@ import { Observable, map, startWith } from 'rxjs';
 import {AsyncPipe} from '@angular/common';
 import { Tag } from '../model/tag.model';
 import { TagService } from '../services/tag/tag.service';
+import { Reminder } from '../model/reminder.model';
+import { NotificationService } from '../services/notification/notification.service';
 
 @Component({
   selector: 'app-create-note-form',
@@ -42,31 +44,55 @@ import { TagService } from '../services/tag/tag.service';
     ReactiveFormsModule,
     AsyncPipe
   ],
-  providers: [
-    provideNativeDateAdapter(),
-    {provide: MAT_DATE_LOCALE, useValue: 'ru-RU'}
-  ],
-  templateUrl: './note-form.component.html',
-  styleUrl: './note-form.component.scss'
+  providers: [provideNativeDateAdapter()],
+  templateUrl: './popup-form.component.html',
+  styleUrl: './popup-form.component.scss'
 })
-export class NoteFormComponent implements OnInit {
+export class PopupFormComponent implements OnInit {
   note: Note;
+  reminder: Reminder;
+  tag: Tag;
+
   separatorKeysCodes: number[] = [ENTER, COMMA];
   tagCtrl = new FormControl('');
   filteredTags: Observable<Tag[]>;
+  mode: 'note' | 'reminder' | 'tag';
   tags: Tag[] = [];
   allTags: Tag[] = []
 
   @ViewChild('tagInput') tagInput: ElementRef<HTMLInputElement>;
 
   constructor(
-    public dialogRef: MatDialogRef<NoteFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { note: Note, allTags: Tag[] },
-    private tagService: TagService
+    public dialogRef: MatDialogRef<PopupFormComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { note: Note, reminder: Reminder, tag: Tag, allTags: Tag[], mode: 'note' | 'reminder' | 'tag' },
+    private tagService: TagService,
+    private notificationService: NotificationService
   ) {
     this.note = data.note;
-    this.allTags = data.allTags.filter(t => !this.note.tags?.find(x => x.id === t.id)) || [];
-    this.tags = this.note.tags || [];
+    this.mode = data.mode;
+
+    switch(this.mode) {
+      case 'note': {
+        this.note = data.note!;
+        break;
+      }
+      case 'reminder': {
+        this.reminder = data.reminder!;
+        break;
+      }
+      case 'tag': {
+        this.tag = data.tag!;
+        break;
+      }
+    }
+    if(data.note) {
+      this.allTags = data.allTags.filter(t => !this.note?.tags?.find(x => x.id === t.id)) || [];
+      this.tags = this.note?.tags || [];
+    } else {
+      this.allTags = data.allTags.filter(t => !this.reminder?.tags?.find(x => x.id === t.id)) || [];
+      this.tags = this.reminder?.tags || [];
+    }
+    
     this.filteredTags = this.tagCtrl.valueChanges.pipe(
       startWith(null),
       map((tag: string | null) => (tag ? this._filter(tag) : this.allTags.slice()))
@@ -108,7 +134,29 @@ export class NoteFormComponent implements OnInit {
   }
 
   onSubmit() {
-    this.dialogRef.close({ ...this.note, tags: this.tags })
+    let isAllRequiredFilled = true;
+    switch(this.mode) {
+      case 'note': {
+        if(!this.note.title?.trim() || !this.note.description?.trim()) {
+          isAllRequiredFilled = false;
+        }
+        break;
+      }
+      case 'reminder': {
+        if(!this.reminder.title?.trim() || !this.reminder.description?.trim() || !this.reminder.dueDate) {
+          isAllRequiredFilled = false;
+        }
+        break;
+      }
+      case 'tag': {
+        break;
+      }
+    }
+    if(!isAllRequiredFilled) {
+      this.notificationService.showSnackbar('Fill all required fields')
+      return
+    }
+    this.dialogRef.close({ ...(this.note || this.reminder || this.tag), tags: this.tags })
   }
 
   private _filter(value: string): Tag[] {

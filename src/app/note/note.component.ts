@@ -1,10 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Note } from '../model/note.model';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
-import { NoteFormComponent } from '../note-form/note-form.component';
+import { PopupFormComponent } from '../popup-form/popup-form.component';
 import { Tag } from '../model/tag.model';
 
 @Component({
@@ -28,15 +28,21 @@ export class NoteComponent implements OnInit {
   @Output() setNoteCompleted: EventEmitter<Note> = new EventEmitter<Note>();
   @Output() editNote: EventEmitter<Note> = new EventEmitter<Note>();
   @Output() deleteNote: EventEmitter<number> = new EventEmitter<number>();
+  @Output() setNoteRendered: EventEmitter<void> = new EventEmitter<void>();
 
-  ngOnInit(): void {}
+  @ViewChild('noteElement') noteElement: ElementRef;
+
+  ngOnInit(): void {
+    this.setNoteRendered.emit();
+  }
 
   onSetNoteCompleted() {
+    this.noteElement.nativeElement.classList.add('completed');
     this.setNoteCompleted?.emit(this.note);
   }
 
   onEditNote(note: Note) {
-    const dialogRef = this.dialogCreateNote.open(NoteFormComponent, { data: { note: {...note}, allTags: this.allTags } });
+    const dialogRef = this.dialogCreateNote.open(PopupFormComponent, { data: { note: {...note}, allTags: this.allTags, mode: 'note' } });
     dialogRef.afterClosed().subscribe(result => {
       if(result) {
         this.editNote.emit(result);
@@ -46,9 +52,5 @@ export class NoteComponent implements OnInit {
 
   onDeleteNote(id: number) {
     this.deleteNote.emit(id);
-  }
-
-  isDeadlineClose(note: Note) {
-    return note.dueDate && !note.completed && new Date().setDate(new Date().getDate() + 3) >= new Date(note.dueDate).getTime()
   }
 }

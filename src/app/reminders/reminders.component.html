@@ -1,0 +1,36 @@
+<div class="remindersWrapper">
+    <div class="remindersWrapper-header">My reminders</div>
+    <div class="remindersWrapper-categories">
+        <span [ngClass]="{'active': currentCategory === 'Upcoming'}" (click)="onCurrentCategoryChange('Upcoming')">Upcoming</span>
+        <span [ngClass]="{'active': currentCategory === 'Overdue'}" (click)="onCurrentCategoryChange('Overdue')">Overdue</span>
+        <span [ngClass]="{'active': currentCategory === 'Completed'}" (click)="onCurrentCategoryChange('Completed')">Completed</span>
+    </div>
+    <div class="remindersWrapper_items">
+        <ng-container *ngIf="isLoading; else elseTemplate">
+            Loading...
+        </ng-container>
+        <ng-template #elseTemplate>
+            <ng-container *ngFor="let reminder of allReminders">
+                <app-reminder 
+                    *ngIf="((!isOverdue(reminder) && !reminder.completed && currentCategory === 'Upcoming') ||
+                            (reminder.completed && currentCategory === 'Completed') ||
+                            (isOverdue(reminder) && !reminder.completed && currentCategory === 'Overdue'))"
+                    [reminder]="reminder"
+                    [allTags]="allTags"
+                    (setReminderRendered)="setReminderRendered()"
+                    (setReminderCompleted)="setReminderCompleted($event)"
+                    (deleteReminder)="deleteReminder($event)"
+                    (editReminder)="editReminder($event)"
+                ></app-reminder>
+            </ng-container>
+            <div *ngIf="isEmpty" class="remindersWrapper_items-empty">
+                <img class="remindersWrapper_items-empty-img" [src]="'/assets/noFound.png'" alt="">
+                <span>Nothing to see...</span>
+            </div>
+        </ng-template>
+    </div>
+    <div (click)="openCreateReminderDialog()" class="remindersWrapper-add">
+        <mat-icon>add</mat-icon>
+        <span>Create new reminder</span>
+    </div>
+</div>

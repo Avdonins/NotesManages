@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, delay, of } from 'rxjs';
 import { Note } from '../../model/note.model';
-import { Tag } from '../../model/tag.model';
 
 @Injectable({
   providedIn: 'root'

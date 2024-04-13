@@ -1,0 +1,36 @@
+<div class="notesWrapper">
+    <div class="notesWrapper-header">My notes</div>
+    <div class="notesWrapper-categories">
+        <span [ngClass]="{'active': currentCategory === 'Upcoming'}" (click)="onCurrentCategoryChange('Upcoming')">Upcoming</span>
+        <!-- <span [ngClass]="{'active': currentCategory === 'Overdue'}" (click)="onCurrentCategoryChange('Overdue')">Overdue</span> -->
+        <span [ngClass]="{'active': currentCategory === 'Completed'}" (click)="onCurrentCategoryChange('Completed')">Completed</span>
+    </div>
+    <div class="notesWrapper_items">
+        <ng-container *ngIf="isLoading; else elseTemplate">
+            Loading...
+        </ng-container>
+        <ng-template #elseTemplate>
+            <ng-container *ngFor="let note of allNotes">
+                <!-- (isOverdue(note) && !note.completed && currentCategory === 'Overdue')) -->
+                <app-note 
+                    *ngIf="((!note.completed && currentCategory === 'Upcoming') ||
+                            (note.completed && currentCategory === 'Completed'))"
+                    [note]="note"
+                    [allTags]="allTags"
+                    (setNoteRendered)="setNoteRendered()"
+                    (setNoteCompleted)="setNoteCompleted($event)"
+                    (deleteNote)="deleteNote($event)"
+                    (editNote)="editNote($event)"
+                ></app-note>
+            </ng-container>
+            <div *ngIf="isEmpty" class="notesWrapper_items-empty">
+                <img class="notesWrapper_items-empty-img" [src]="'/assets/noFound.png'" alt="">
+                <span>Nothing to see...</span>
+            </div>
+        </ng-template>
+    </div>
+    <div (click)="openCreateNoteDialog()" class="notesWrapper-add">
+        <mat-icon>add</mat-icon>
+        <span>Create new note</span>
+    </div>
+</div>

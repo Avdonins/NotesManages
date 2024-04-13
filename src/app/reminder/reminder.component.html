@@ -1,0 +1,23 @@
+<div class="reminder" #reminderElement [ngClass]="{'completed': reminder.completed}">
+    <div class="reminder-title">
+        <span class="reminder-title-text">{{reminder.title}}</span>
+        <div class="reminder-title_buttons">
+            @if (!reminder.completed) {
+                <mat-icon [matTooltip]="'Set completed'" (click)="onSetReminderCompleted()" class="reminder-title_buttons-icon">done</mat-icon>
+            }
+            <mat-icon [matTooltip]="'Edit reminder'" (click)="onEditReminder(reminder)" class="reminder-title_buttons-icon">edit</mat-icon>
+            <mat-icon [matTooltip]="'Delete reminder'" (click)="onDeleteReminder(reminder.id)" class="reminder-title_buttons-icon">delete</mat-icon>
+        </div>
+    </div>
+    <div class="reminder-description">
+        <span class="reminder-description-text">{{reminder.description}}</span>
+    </div>
+    <div class="reminder-dueDate" [ngClass]="{'deadlineClose': isDeadlineClose(reminder)}">
+        <span class="reminder-dueDate-text">{{reminder.dueDate | date: 'EEEE, d MMMM'}}</span>
+    </div>
+    <div class="reminder-tags">
+        @for (tag of reminder.tags; track $index) {
+            <span class="reminder-tags-text">#{{tag.name}}</span>
+        }
+    </div>
+</div>
