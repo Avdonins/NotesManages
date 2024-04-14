@@ -1,12 +1,6 @@
 <div class="content">
     <mat-sidenav-container class="content-wrapper">
         <mat-sidenav #sidenav [mode]="'side'" class="content-wrapper_leftside">
-            <div class="content-wrapper_leftside-button" (click)="changeMode('home')">
-                <div class="content-wrapper_leftside-button-inner">
-                    <mat-icon>home</mat-icon>
-                    <span class="name">Home</span>
-                </div>
-            </div>
             <div class="content-wrapper_leftside-button" (click)="changeMode('notes')">
                 <div class="content-wrapper_leftside-button-inner">
                     <mat-icon>notes</mat-icon>
@@ -31,26 +25,30 @@
             <div class="content-wrapper_rightside-header">
                 <span class="content-wrapper_rightside-header_date">{{dateValue | date: 'EEEE, MMMM d'}}</span>
                 <span class="content-wrapper_rightside-header_greeeting">{{greeting}}, User</span>
-                <div class="content-wrapper_rightside-header_counter">
-                    <div class="content-wrapper_rightside-header_counter-select">
-                        <mat-select [(value)]="selectStatisticMode" (selectionChange)="onChangeSelectStatisticMode()">
-                            <mat-option value="week">My week</mat-option>
-                            <mat-option value="month">My month</mat-option>
-                            <mat-option value="all">All time</mat-option>
-                        </mat-select>
+                @if (displayMode === 'reminders') {
+                    <div class="content-wrapper_rightside-header_counter">
+                        <div class="content-wrapper_rightside-header_counter-select">
+                            <mat-select [(value)]="selectStatisticMode" (selectionChange)="onChangeSelectStatisticMode()">
+                                <mat-option value="week">My week</mat-option>
+                                <mat-option value="month">My month</mat-option>
+                                <mat-option value="all">All time</mat-option>
+                            </mat-select>
+                        </div>
+                        <div class="content-wrapper_rightside-header_counter-border"></div>
+                        <div class="content-wrapper_rightside-header_counter-notes">
+                            <mat-icon>check</mat-icon>
+                            <span>{{elementCount}} {{displayMode}} completed</span>
+                        </div>
                     </div>
-                    <div class="content-wrapper_rightside-header_counter-border"></div>
-                    <div class="content-wrapper_rightside-header_counter-notes">
-                        <mat-icon>check</mat-icon>
-                        <span>{{notesCount}} notes completed</span>
-                    </div>
-                </div>
+                }
             </div>
             
             @if (displayMode === 'notes') {
                 <app-notes (setNotes)="setNotes($event)"></app-notes>
             } @else if (displayMode === 'reminders') {
                 <app-reminders (setReminders)="setReminders($event)"></app-reminders>
+            } @else {
+                <app-tags-wrapper (setTags)="setTags($event)"></app-tags-wrapper>
             }
             
         </mat-sidenav-content>

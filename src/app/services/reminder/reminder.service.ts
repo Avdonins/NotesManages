@@ -50,4 +50,9 @@ export class ReminderService {
     localStorage.setItem('reminders', JSON.stringify(this.fakeData));
     return of(true)//.pipe(delay((Math.random() * (4000 + 1000) + 3000)));
   }
+
+  deleteTag(tagId: number) {
+    this.fakeData.forEach(reminder => reminder.tags = (reminder.tags || []).filter(tag => tag.id !== tagId));
+    localStorage.setItem('notes', JSON.stringify(this.fakeData));
+  }
 }

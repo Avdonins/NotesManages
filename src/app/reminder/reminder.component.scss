@@ -48,6 +48,11 @@
         display: flex;
         flex-wrap: wrap;
         gap: 2%;
+
+        &-text {
+            border-radius: 15px;
+            padding: 2px 10px;
+        }
     }
 
     &:hover {

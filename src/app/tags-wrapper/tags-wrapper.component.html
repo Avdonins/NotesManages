@@ -1,0 +1,28 @@
+<div class="tags" #tagElement>
+    <span class="tags-header">My tags</span>
+    <mat-chip-grid class="tags-items" #chipGrid>
+        @for (tag of allTags; track tag) {
+            <mat-chip-row (removed)="removeTag(tag)" [style.backgroundColor]="tag.color">
+                #{{tag.name}}
+                <button matChipRemove>
+                    <mat-icon>cancel</mat-icon>
+                </button>
+            </mat-chip-row>
+        }
+    </mat-chip-grid>
+    <div class="tags-inputs">
+        <mat-form-field>
+            <mat-label>Create new tag</mat-label>
+            <input [matChipInputFor]="chipGrid" (keyup.enter)="addTag()" [(ngModel)]="newTag" matInput placeholder="Press Enter to create"/>
+        </mat-form-field>
+        <div class="tags-inputs_color">
+            <span>Choose the color</span>
+            <div class="tags-inputs_color-wrapper">
+                @for (color of colors; track $index) {
+                    <button (click)="tagColor = color" [style.background-color]="color" class="tags-inputs_color-wrapper-button"></button>
+                }
+            </div>
+        </div>
+        <button (click)="addTag()" class="tags-inputs_submit" mat-flat-button>Submit</button>
+    </div>
+</div>

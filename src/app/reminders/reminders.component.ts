@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { TagService } from '../services/tag/tag.service';
 import { ReminderService } from '../services/reminder/reminder.service';
 import { PopupFormComponent } from '../popup-form/popup-form.component';
+import { NotificationService } from '../services/notification/notification.service';
 
 @Component({
   selector: 'app-reminders',
@@ -26,9 +27,9 @@ export class RemindersComponent {
   constructor(
     private remindersService: ReminderService,
     private tagService: TagService,
-    public dialogCreateReminder: MatDialog
-  ) {
-  }
+    public dialogCreateReminder: MatDialog,
+    private notificationService: NotificationService
+  ) { }
 
   @Output() setReminders: EventEmitter<Reminder[]> = new EventEmitter<Reminder[]>();
 
@@ -36,7 +37,6 @@ export class RemindersComponent {
     this.isLoading = true;
     this.remindersService.getAllReminders().subscribe((reminders) => {
       this.allReminders = reminders;
-      console.log(reminders);
       this.setReminders.emit(this.allReminders);
     }).add(() => {
       this.tagService.getAllTags().subscribe((tags) => {
@@ -65,15 +65,14 @@ export class RemindersComponent {
 
   editReminder(reminder: Reminder) {
     this.remindersService.editReminder(reminder).subscribe((response: boolean) => {
-      if(!response) alert('Error!');
+      if(!response) this.notificationService.showSnackbar('Error! No such reminder was found');
     })
   }
 
   deleteReminder(id: number) {
     this.remindersService.deleteReminder(id).subscribe((response: boolean) => {
       if(!response) {
-        alert('Error!');
-        return;
+        this.notificationService.showSnackbar('Error! No such reminder was found');
       } else {
         this.allReminders = this.allReminders.filter(reminder => reminder.id !== id)
       }
@@ -87,13 +86,10 @@ export class RemindersComponent {
   }
 
   isOverdue(reminder: Reminder) {
-    return reminder.dueDate && new Date(reminder.dueDate).getTime() < new Date().getTime();
+    return reminder.dueDate && new Date(reminder.dueDate).getTime() < new Date(new Date().getDate()).getTime();
   }
 
   setReminderRendered() {
-    console.log(
-      'upd'
-    )
     if(this.isEmpty) {
       setTimeout(() => this.isEmpty = false);
     }

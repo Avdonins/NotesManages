@@ -11,39 +11,4 @@
         color: #FFF;
         cursor: pointer;
     }
-
-    &-button {
-        display: flex;
-        border-radius: 25px;
-        margin-left: 1%;
-        
-        &.mat-grey {
-            background-color: #3D3E40;
-        }
-
-        &_icon {
-            display: flex;
-            width: 20px;
-            height: 20px;
-            background-color: #F06A6A;
-            border-radius: 50%;
-
-            & mat-icon {
-                color: #FFF;
-                font-size: 20px;
-
-            }
-        }
-        
-        ::ng-deep .mdc-button__label {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            column-gap: 5px;
-        }
-    }
-
-    &-text {
-        color: #FFF;
-    }
 }

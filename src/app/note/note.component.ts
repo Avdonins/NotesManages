@@ -25,7 +25,6 @@ export class NoteComponent implements OnInit {
   
   @Input() note: Note;
   @Input() allTags: Tag[]
-  @Output() setNoteCompleted: EventEmitter<Note> = new EventEmitter<Note>();
   @Output() editNote: EventEmitter<Note> = new EventEmitter<Note>();
   @Output() deleteNote: EventEmitter<number> = new EventEmitter<number>();
   @Output() setNoteRendered: EventEmitter<void> = new EventEmitter<void>();
@@ -34,11 +33,6 @@ export class NoteComponent implements OnInit {
 
   ngOnInit(): void {
     this.setNoteRendered.emit();
-  }
-
-  onSetNoteCompleted() {
-    this.noteElement.nativeElement.classList.add('completed');
-    this.setNoteCompleted?.emit(this.note);
   }
 
   onEditNote(note: Note) {

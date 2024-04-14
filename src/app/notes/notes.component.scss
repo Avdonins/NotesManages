@@ -9,29 +9,15 @@ $border-color: #424244;
     &-header {
         font-size: 20px;
         height: 20%;
-    }
-
-    &-categories {
-        margin-top: 15px;
-        display: flex;
-        gap: 20px;
+        padding-bottom: 15px;
         border-bottom: 1px solid $border-color;
-        color: #A2A0A2;
-
-        span {
-            cursor: pointer;
-            &.active {
-                color: white;
-                border-bottom: 1px solid white;
-            }
-        }
     }
 
     &_items {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 3%;
-        margin-top: 3%;
+        margin-top: 2%;
         margin-bottom: 3%;
 
         &-empty {

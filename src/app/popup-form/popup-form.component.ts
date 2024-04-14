@@ -148,9 +148,6 @@ export class PopupFormComponent implements OnInit {
         }
         break;
       }
-      case 'tag': {
-        break;
-      }
     }
     if(!isAllRequiredFilled) {
       this.notificationService.showSnackbar('Fill all required fields')

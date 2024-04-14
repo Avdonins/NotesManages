@@ -17,7 +17,7 @@
     </div>
     <div class="reminder-tags">
         @for (tag of reminder.tags; track $index) {
-            <span class="reminder-tags-text">#{{tag.name}}</span>
+            <span [style.background-color]="tag.color || '#e0e0e0'" class="reminder-tags-text">#{{tag.name}}</span>
         }
     </div>
 </div>

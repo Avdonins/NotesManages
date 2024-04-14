@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, delay, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Note } from '../../model/note.model';
 
 @Injectable({
@@ -27,15 +27,6 @@ export class NoteService {
     return of(this.fakeData)//.pipe(delay((Math.random() * (4000 + 1000) + 3000)));
   }
 
-  setNoteCompleted(note: Note): Observable<Note[]> {
-    const index = this.fakeData.findIndex(n => n.id === note.id);
-    if(index > -1) {
-      this.fakeData[index].completed = true;
-    }
-    localStorage.setItem('notes', JSON.stringify(this.fakeData));
-    return of(this.fakeData)//.pipe(delay((Math.random() * (4000 + 1000) + 3000)));
-  }
-
   deleteNote(id: number): Observable<boolean> {
     const startLen: number = this.fakeData.length;
     this.fakeData = this.fakeData.filter(n => n.id !== id);
@@ -50,5 +41,10 @@ export class NoteService {
     this.fakeData[idx] = editedNote;
     localStorage.setItem('notes', JSON.stringify(this.fakeData));
     return of(true)//.pipe(delay((Math.random() * (4000 + 1000) + 3000)));
+  }
+
+  deleteTag(tagId: number) {
+    this.fakeData.forEach(note => note.tags = (note.tags || []).filter(tag => tag.id !== tagId));
+    localStorage.setItem('notes', JSON.stringify(this.fakeData));
   }
 }

@@ -55,12 +55,6 @@ export class NotesComponent implements OnInit {
     })
   }
 
-  setNoteCompleted(note: Note) {
-    this.notesService.setNoteCompleted(note).subscribe((data) => {
-      this.allNotes = data;
-    })
-  }
-
   editNote(note: Note) {
     this.notesService.editNote(note).subscribe((response: boolean) => {
       if(!response) alert('Error!');
