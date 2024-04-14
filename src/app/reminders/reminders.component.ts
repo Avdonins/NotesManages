@@ -86,7 +86,11 @@ export class RemindersComponent {
   }
 
   isOverdue(reminder: Reminder) {
-    return reminder.dueDate && new Date(reminder.dueDate).getTime() < new Date(new Date().getDate()).getTime();
+    return reminder.dueDate && 
+      (new Date(reminder.dueDate).getTime() < new Date(new Date().getDate()).getTime() || 
+      new Date(reminder.dueDate).getTime() == new Date(new Date().getDate()).getTime() || 
+      (new Date().getHours() > +reminder.time?.split(':')[0] || 
+      (new Date().getHours() == +reminder.time?.split(':')[0] && new Date().getMinutes() >= +reminder.time?.split(':')[1])));
   }
 
   setReminderRendered() {

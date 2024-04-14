@@ -65,8 +65,15 @@
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
             </div>
-        } @else {
-            <span>Tags here</span>
+
+            <div class="form_time">
+                <label>Time of reminder</label>
+                <input 
+                    class="form_time-input"
+                    type="time"
+                    placeholder='hh:mm'
+                    [(ngModel)]="reminder.time">
+            </div>
         }
 
         <div class="form_tags">

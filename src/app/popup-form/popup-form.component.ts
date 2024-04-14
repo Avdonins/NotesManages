@@ -143,7 +143,7 @@ export class PopupFormComponent implements OnInit {
         break;
       }
       case 'reminder': {
-        if(!this.reminder.title?.trim() || !this.reminder.description?.trim() || !this.reminder.dueDate) {
+        if(!this.reminder.title?.trim() || !this.reminder.description?.trim() || !this.reminder.dueDate || !this.reminder.time) {
           isAllRequiredFilled = false;
         }
         break;

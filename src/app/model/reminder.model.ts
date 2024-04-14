@@ -5,6 +5,7 @@ export interface Reminder {
     title: string
     description: string
     dueDate: Date
+    time: string
     completed: boolean
     tags: Tag[] | null
 }

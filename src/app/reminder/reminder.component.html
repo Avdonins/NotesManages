@@ -13,7 +13,7 @@
         <span class="reminder-description-text">{{reminder.description}}</span>
     </div>
     <div class="reminder-dueDate" [ngClass]="{'deadlineClose': isDeadlineClose(reminder)}">
-        <span class="reminder-dueDate-text">{{reminder.dueDate | date: 'EEEE, d MMMM'}}</span>
+        <span class="reminder-dueDate-text">{{reminder.dueDate | date: 'EEEE, d MMMM'}} {{reminder.time}}</span>
     </div>
     <div class="reminder-tags">
         @for (tag of reminder.tags; track $index) {
